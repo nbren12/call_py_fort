@@ -4,6 +4,9 @@ all: | build
 	cd build && $(CMAKE) ..
 	${MAKE} -C build
 
+install: all
+	${MAKE} -C build install
+
 debug: | build
 	mkdir -p build
 	cd build && $(CMAKE) .. -DCMAKE_BUILD_TYPE=Debug
