@@ -1,0 +1,12 @@
+module test_call_py_fort_mod
+    use pfunit_mod
+    use call_py_fort_mod
+
+contains
+    
+    @test
+    subroutine test_bar()
+        @assertTrue(.true.)
+    end subroutine
+
+end module

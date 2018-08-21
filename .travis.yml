@@ -1,0 +1,25 @@
+language: c
+sudo: required
+
+env:
+    global:
+        - CC=gcc-4.8
+        - FC=gfortran-4.8
+        - OMPI_CC=${CC}
+        - OMPI_FC=${FC}
+        - PFUNIT=${PWD}/pfunit
+
+install:
+    - sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
+    - sudo apt-get update
+    - sudo apt-get install gcc-4.8 gfortran-4.8 libgomp1 openmpi-bin libopenmpi-dev cmake
+
+    - wget http://downloads.sourceforge.net/project/pfunit/Source/pFUnit.tar.gz
+    - mkdir -p pfunit-src
+    - tar   -C pfunit-src --strip-components=1 -xf pFUnit.tar.gz
+    - make  -C pfunit-src F90=${FC} F90_VENDOR=GNU MPI=YES INSTALL_DIR=${PFUNIT}
+    - make  -C pfunit-src F90=${FC} F90_VENDOR=GNU MPI=YES INSTALL_DIR=${PFUNIT} install
+
+script:
+    - make debug
+    - ctest
