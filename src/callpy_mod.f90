@@ -1,5 +1,5 @@
 ! module for calling python from C
-module python_caller
+module callpy_mod
   use, intrinsic :: iso_c_binding
   implicit none
 
@@ -12,11 +12,6 @@ module python_caller
        integer(c_int) :: nx, ny, nz
        integer(c_int) :: y
      end function set_state_py
-
-     function call_function() result(y) bind(c)
-       use iso_c_binding
-       integer(c_int) :: y
-     end function call_function
   end interface
 contains
 
@@ -25,11 +20,12 @@ contains
        function call_function_py(mod_name_c, fun_name_c) &
             result(y) bind(c, name='call_function')
          use iso_c_binding
-         character(kind=c_char, len=*) mod_name_c, fun_name_c
+         character(kind=c_char) mod_name_c, fun_name_c
          integer(c_int) :: y
        end function call_function_py
     end interface
 
+    character(len=*) :: module_name, function_name
     character(kind=c_char, len=256) :: mod_name_c, fun_name_c
 
     mod_name_c = trim(module_name)//char(0)
@@ -130,7 +126,7 @@ contains
 
     tag_c = trim(tag)//char(0)
     call check(get_state_py(tag_c, t_, n))
-    t = t_
+    t = real(t_)
   end subroutine get_state
 
 
@@ -159,4 +155,4 @@ contains
     if (ret /= 0) stop -1
   end subroutine check
 
-end module python_caller
+end module callpy_mod

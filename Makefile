@@ -1,11 +1,12 @@
+CMAKE=cmake
 all: | build
 	mkdir -p build
-	cd build && cmake ..
+	cd build && $(CMAKE) ..
 	${MAKE} -C build
 
 debug: | build
 	mkdir -p build
-	cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug
+	cd build && $(CMAKE) .. -DCMAKE_BUILD_TYPE=Debug
 	${MAKE} -C build
 
 clean:

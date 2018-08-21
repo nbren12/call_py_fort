@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.4)
 enable_language(Fortran)
 
-project(call_py_fort)
+project(callpy)
 
 include(CTest)
 
-set(CMAKE_C_COMPILER       mpicc)
-set(CMAKE_Fortran_COMPILER mpif90)
+set(CMAKE_C_COMPILER       gcc)
+set(CMAKE_Fortran_COMPILER gfortran)
 
 if (${CMAKE_Fortran_COMPILER_ID} MATCHES GNU)
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -Wall -Wextra -Werror -fimplicit-none -fbacktrace")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -Wall -Wextra -fimplicit-none -fbacktrace")
     set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} -Wnoerror")
     set(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} -fbounds-check --coverage")
 

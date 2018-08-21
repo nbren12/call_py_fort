@@ -13,11 +13,7 @@ extern int call_function(char *, char *);
 
 module = """
 from my_plugin import ffi
-import module
-
-@ffi.def_extern()
-def sam_hook(*args):
-    module.hook(ffi, args)
+import callpy as module
 
 @ffi.def_extern(error=1)
 def set_state_1d(*args):

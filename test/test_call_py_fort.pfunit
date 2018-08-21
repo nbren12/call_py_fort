@@ -1,6 +1,6 @@
 module test_call_py_fort_mod
     use pfunit_mod
-    use call_py_fort_mod
+    use callpy_mod
 
 contains
     
@@ -8,5 +8,92 @@ contains
     subroutine test_bar()
         @assertTrue(.true.)
     end subroutine
+
+    @test
+    subroutine testHelloWorld()
+    use pfunit_mod
+    implicit none
+    @assertEqual("Hello World!","Hello World!")
+    end subroutine testHelloWorld
+
+    @test
+    subroutine test1d()
+    use pfunit_mod
+    use iso_c_binding
+    implicit none
+
+    integer i
+    real :: a(10)
+    real :: tmp(10)
+
+
+    call random_number(a)
+
+    call set_state_1d("a", a)
+    call get_state("a", tmp, 10)
+
+    @assertEqual(a, tmp)
+
+    end subroutine test1d
+
+    @test
+    subroutine test2d()
+    use pfunit_mod
+    use iso_c_binding
+    implicit none
+
+    integer i, j
+    real :: a(10, 5)
+    real :: tmp(10, 5)
+
+
+    call random_number(a)
+
+    call set_state2d("a", a)
+    call get_state("a", tmp, size(a))
+
+    @assertEqual(a, tmp)
+
+    end subroutine test2d
+
+
+    @test
+    subroutine test3d()
+    use pfunit_mod
+    use iso_c_binding
+    implicit none
+
+    integer i, j, k
+    real :: a(10, 5, 3)
+    real :: tmp(10, 5, 3)
+
+
+    call random_number(a)
+
+    call set_state("a", a)
+    call get_state("a", tmp, size(a))
+
+    @assertEqual(a, tmp)
+
+    end subroutine test3d
+
+
+    @test
+    subroutine test_send_char()
+    use pfunit_mod
+    use iso_c_binding
+    implicit none
+
+    integer i, j, k
+    character(len=256) :: a, b
+
+    a = "hello"
+
+    call set_state_char("a", a)
+    !call get_char("a", b)
+
+    !@assertEqual(a, b)
+
+    end subroutine test_send_char
 
 end module
