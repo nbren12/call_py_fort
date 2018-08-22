@@ -1,6 +1,9 @@
 import importlib
 
 import numpy as np
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 # Global state array
 STATE = {}
