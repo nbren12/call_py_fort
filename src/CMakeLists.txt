@@ -1,4 +1,4 @@
-add_library(callpy callpy_mod.f90)
+add_library(callpy SHARED callpy_mod.f90)
 
 target_include_directories(callpy PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
@@ -32,4 +32,5 @@ add_custom_command(
 add_custom_target(cffi_lib
   DEPENDS ${CFFI_LIB}
 )
-set(CFFI_LIB ${CFFI_LIB} PARENT_SCOPE)
+
+install(FILES ${CFFI_LIB} DESTINATION lib) 
