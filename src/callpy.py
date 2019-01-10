@@ -3,7 +3,11 @@ import importlib
 import numpy as np
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger('callpy')
+
+_ATTR_KEY = '_ATTRIBUTES'
+_DIM_KEY = '_DIMS'
 
 # Global state array
 STATE = {}
@@ -67,11 +71,24 @@ def set_state_char(args, ffi=None):
     STATE[tag] = chr
 
 
+def set_dims(args, ffi=None):
+    tag, chr = [ffi.string(x).decode('UTF-8') for x in args]
+    dims_registry = STATE.setdefault(_DIM_KEY, {})
+    dims_registry[tag] = chr.split(',')
+
+
+def set_attribute(args, ffi=None):
+    name, attribute_name, value = [ffi.string(x).decode('UTF-8') for x in args]
+    attrs = STATE.setdefault(_ATTR_KEY, {}).setdefault(name, {})
+    attrs[attribute_name] = value
+
+
 def get_state(args, ffi=None):
     tag, t, n = args
     tag = ffi.string(tag).decode('UTF-8')
     arr = asarray(ffi, t, (n[0], ))
 
+    logger.info(f"Getting {tag}. Present in state_dict: {tag in STATE}.")
     src = STATE.get(tag, np.zeros(n[0]))
     arr[:] = src.ravel()
 
@@ -88,3 +105,19 @@ def call_function(module_name, function_name):
     # call the function
     # this function can edit STATE inplace
     fun(STATE)
+
+
+# Public functions
+def get_state_as_dataset(state=None):
+    import xarray as xr
+    if state is None:
+        state = STATE
+
+    attrs = state.get(_ATTR_KEY, {})
+    dims = state.get(_DIM_KEY, {})
+    data_vars = {}
+    for key in dims:
+        arr = state[key].squeeze()
+        darr = xr.DataArray(arr, dims=dims[key], attrs=attrs.get(key))
+        data_vars[key] = darr
+    return xr.Dataset(data_vars)

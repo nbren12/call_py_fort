@@ -5,6 +5,8 @@ ffibuilder = cffi.FFI()
 header = """
 extern int set_state_py(char *, double *, int*, int*, int*);
 extern int set_state_char(char *, char *);
+extern int set_attribute(char *, char *, char *);
+extern int set_dims(char *, char *);
 extern int get_state(char *, double *, int*);
 extern int set_state_1d(char *, double *, int*);
 extern int set_state_scalar(char *, double *);
@@ -36,6 +38,16 @@ def set_state_char(*args):
     return 0
 
 @ffi.def_extern(error=1)
+def set_dims(*args):
+    module.set_dims(args, ffi=ffi)
+    return 0
+
+@ffi.def_extern(error=1)
+def set_attribute(*args):
+    module.set_attribute(args, ffi=ffi)
+    return 0
+
+@ffi.def_extern(error=1)
 def get_state(*args):
     module.get_state(args, ffi=ffi)
     return 0
@@ -45,6 +57,7 @@ def call_function(*args):
     a, b = [ffi.string(ch).decode('UTF-8') for ch in args]
     module.call_function(a, b)
     return 0
+
 """
 
 with open("plugin.h", "w") as f:

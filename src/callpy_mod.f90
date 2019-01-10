@@ -149,6 +149,42 @@ contains
     call check(set_state_char_py(tag_, chr_))
   end subroutine set_state_char
 
+  subroutine set_attribute(tag, attr, val)
+    interface
+       function set_attribute_py(tag, attr, val) result(y)&
+            bind(c, name='set_attribute')
+         use iso_c_binding
+         implicit none
+         character(c_char) :: tag, attr, val
+         integer(c_int) :: y
+       end function set_attribute_py
+    end interface
+    character(len=*) :: tag, attr, val
+    character(len=256) :: tag_, attr_, val_
+    tag_ = trim(tag)//char(0)
+    attr_ = trim(attr)//char(0)
+    val_ = trim(val)//char(0)
+    call check(set_attribute_py(tag_, attr_, val_))
+  end subroutine set_attribute
+
+  subroutine set_dims(tag, dim)
+    interface
+       function set_dims_py(tag, dim) result(y)&
+            bind(c, name='set_dims')
+         use iso_c_binding
+         implicit none
+         character(c_char) :: tag
+         character(c_char) :: dim
+         integer(c_int) :: y
+       end function set_dims_py
+    end interface
+    character(len=*) :: tag, dim
+    character(len=256) :: tag_, chr_
+
+    tag_ = trim(tag)//char(0)
+    chr_ = trim(dim)//char(0)
+    call check(set_dims_py(tag_, chr_))
+  end subroutine set_dims
 
   subroutine check(ret)
     integer :: ret
