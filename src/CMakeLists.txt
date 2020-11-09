@@ -1,5 +1,7 @@
 add_library(callpy SHARED callpy_mod.f90)
 
+find_package(PythonInterp REQUIRED) #Sets ${PYTHON_EXECUTABLE}
+
 target_include_directories(callpy PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:include>
@@ -24,7 +26,7 @@ set(CFFI_LIB ${CFFI_LIB} PARENT_SCOPE)
 add_custom_command(
   OUTPUT ${CFFI_LIB}
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/builder.py
-  COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/builder.py
+  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/builder.py
   COMMENT "Building CFFI Module"
 )
 
@@ -33,4 +35,5 @@ add_custom_target(cffi_lib
   DEPENDS ${CFFI_LIB}
 )
 
+add_dependencies(callpy cffi_lib)
 install(FILES ${CFFI_LIB} DESTINATION lib) 

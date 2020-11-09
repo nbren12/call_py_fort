@@ -13,6 +13,7 @@ module callpy_mod
        integer(c_int) :: y
      end function set_state_py
   end interface
+
 contains
 
   subroutine call_function(module_name, function_name)

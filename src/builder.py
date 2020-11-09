@@ -1,9 +1,11 @@
 # file plugin_build.py
+import sys
+import os
 import cffi
 ffibuilder = cffi.FFI()
 
 header = """
-extern int set_state_py(char *, double *, int*, int*, int*);
+extern int set_state_py(char *, void *, char * type, int*, int*, int*);
 extern int set_state_char(char *, char *);
 extern int get_state(char *, double *, int*);
 extern int set_state_1d(char *, double *, int*);
@@ -57,5 +59,4 @@ ffibuilder.set_source("my_plugin", r'''
 ''')
 
 ffibuilder.embedding_init_code(module)
-
 ffibuilder.compile(target="libplugin.so", verbose=True)
