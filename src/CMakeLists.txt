@@ -1,4 +1,4 @@
-add_library(callpy SHARED callpy_mod.f90)
+add_library(callpy STATIC callpy_mod.f90)
 
 find_package(PythonInterp REQUIRED) #Sets ${PYTHON_EXECUTABLE}
 
