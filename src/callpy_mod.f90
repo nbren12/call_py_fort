@@ -31,6 +31,9 @@ module callpy_mod
     module procedure get_state_float_3d
     module procedure get_state_float_2d
     module procedure get_state_float_1d
+    module procedure get_state_double_3d
+    module procedure get_state_double_2d
+    module procedure get_state_double_1d
   end interface
 
   public :: get_state, set_state, set_state_1d, set_state2d, set_state_char, &
@@ -150,6 +153,47 @@ contains
     tag_c = trim(tag)//char(0)
     call check(set_state_scalar_py(tag_c, t_))
   end subroutine set_state_scalar
+
+
+  subroutine get_state_double_3d(tag, t)
+    character(len=*) :: tag
+    real(8) :: t(:, :, :)
+    real(c_double) :: t_(size(t, 1), size(t, 2), size(t, 3))
+    character(len=256) :: tag_c
+
+    integer(c_int) :: n
+    n  = size(t)
+    tag_c = trim(tag)//char(0)
+    call check(get_state_py(tag_c, t_, n))
+    t = dble(t_)
+  end subroutine get_state_double_3d
+
+
+  subroutine get_state_double_2d(tag, t)
+    character(len=*) :: tag
+    real(8) :: t(:, :)
+    real(c_double) :: t_(size(t, 1), size(t, 2))
+    character(len=256) :: tag_c
+
+    integer(c_int) :: n
+    n  = size(t)
+    tag_c = trim(tag)//char(0)
+    call check(get_state_py(tag_c, t_, n))
+    t = dble(t_)
+  end subroutine get_state_double_2d
+
+  subroutine get_state_double_1d(tag, t)
+    character(len=*) :: tag
+    real(8) :: t(:)
+    real(c_double) :: t_(size(t, 1))
+    character(len=256) :: tag_c
+
+    integer(c_int) :: n
+    n  = size(t)
+    tag_c = trim(tag)//char(0)
+    call check(get_state_py(tag_c, t_, n))
+    t = dble(t_)
+  end subroutine get_state_double_1d
 
   subroutine get_state_float_3d(tag, t)
     character(len=*) :: tag
