@@ -7,6 +7,9 @@ all: | build
 install: all
 	${MAKE} -C build install
 
+test:
+	${MAKE} -C build test
+
 debug: | build
 	mkdir -p build
 	cd build && $(CMAKE) .. -DCMAKE_BUILD_TYPE=Debug
@@ -16,7 +19,7 @@ clean:
 	${RM} -r build
 
 check: all
-	cd build && ctest
+	make -C test test
 
 build:
 	mkdir -p $@

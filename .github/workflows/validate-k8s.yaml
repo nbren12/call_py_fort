@@ -1,0 +1,34 @@
+on: push
+name: Validate
+jobs:
+  kubeval:
+    runs-on: ubuntu-latest
+    env:
+      F90: gfortran
+      F90_VENDOR: GNU
+      PFUNIT: /usr/local
+    steps:
+      - uses: actions/checkout@master
+      - name: install pfunit
+        run: |
+          apt-get update && \
+              DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata && \
+              apt-get install -y  --no-install-recommends \
+              cmake \
+              python3 \
+              libpython3-dev \
+              python3-dev \
+              python3-setuptools \
+              python3-pip \
+              python3-cffi \
+              python3-numpy \
+              cython3
+
+
+          curl -L https://github.com/Goddard-Fortran-Ecosystem/pFUnit/archive/3.2.9.tar.gz | tar xz
+          cd pFUnit-3.2.9 && \
+              cmake . && \
+              make &&\
+              make install INSTALL_DIR=${PFUNIT}
+
+          make check
