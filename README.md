@@ -48,19 +48,20 @@ dynamic linker find the library.
 ## Usage
 
 Once installed, this library is very simple to use. For example:
+```
+program example
+use callpy_mod
+implicit none
 
-    program example
-    implicit none
-    use callpy
-    
-    real(8) :: a(10)
+real(8) :: a(10)
+a = 1.0
+call set_state("a", a)
+call call_function("builtins", "print")
+! read any changes from "a" back into a.
+call get_state("a", a)
 
-    call set_state("a", a)
-    call call_function("builtins", "print")
-    ! read any changes from "a" back into a.
-    call get_state("a", a)
-
-    end program example
+end program example
+```
 
 It basically operates by pushing fortran arrays into a global python
 dictionary, calling python functions with this dictionary as input, and then
@@ -77,7 +78,14 @@ roughly translate to
 
 You should be able to compile the above by running
 
-    gfortran -I/usr/local/include -L/usr/local/lib -lcallpy file.f90
+    gfortran -I/usr/local/include -Wl,-rpath=/usr/local/lib -L/usr/local/lib main.f90 -lcallpy
+    
+Here's what happens when you run the compiled binary:
+```
+$ ./a.out 
+{'a': array([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.])}
+```
+
 
 By modifying, the arguments of `call_function` you can call any python
 function in the pythonpath.
