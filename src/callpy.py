@@ -43,6 +43,7 @@ def asarray(ffi, ptr, shape, **kwargs):
 def set_state(args, ffi=None):
     tag, t, nx, ny, nz = args
     shape = (nz[0], ny[0], nx[0])
+    shape = [n for n in shape if n != -1]
 
     tag = ffi.string(tag).decode('UTF-8')
     arr = asarray(ffi, t, shape).copy()

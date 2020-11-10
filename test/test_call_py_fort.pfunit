@@ -29,7 +29,7 @@ contains
 
     call random_number(a)
 
-    call set_state_1d("a", a)
+    call set_state("a", a)
     call get_state("a", tmp)
 
     @assertEqual(a, tmp)
@@ -49,7 +49,7 @@ contains
 
     call random_number(a)
 
-    call set_state2d("a", a)
+    call set_state("a", a)
     call get_state("a", tmp)
 
     @assertEqual(a, tmp)
@@ -74,6 +74,25 @@ contains
     @assertEqual(a, tmp)
 
     end subroutine test3d_double
+
+   @test
+    subroutine test2d_double()
+    use pfunit_mod
+    use iso_c_binding
+    implicit none
+
+    integer i, j, k
+    real(8) :: a(10, 5)
+    real(8) :: tmp(10, 5)
+
+
+    call random_number(a)
+
+    call set_state("a", a)
+    call get_state("a", tmp)
+    @assertEqual(a, tmp)
+
+    end subroutine test2d_double
 
     @test
     subroutine test3d()
