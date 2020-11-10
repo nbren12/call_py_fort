@@ -30,7 +30,7 @@ contains
     call random_number(a)
 
     call set_state_1d("a", a)
-    call get_state("a", tmp, 10)
+    call get_state("a", tmp)
 
     @assertEqual(a, tmp)
 
@@ -50,7 +50,7 @@ contains
     call random_number(a)
 
     call set_state2d("a", a)
-    call get_state("a", tmp, size(a))
+    call get_state("a", tmp)
 
     @assertEqual(a, tmp)
 
@@ -90,7 +90,7 @@ contains
     call random_number(a)
 
     call set_state("a", a)
-    call get_state("a", tmp, size(a))
+    call get_state("a", tmp)
     @assertEqual(a, tmp)
 
     end subroutine test3d

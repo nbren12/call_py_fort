@@ -7,7 +7,7 @@ ffibuilder = cffi.FFI()
 header = """
 extern int set_state_py(char *, double *, int*, int*, int*);
 extern int set_state_char(char *, char *);
-extern int get_state(char *, double *, int*);
+extern int get_state_py(char *, double *, int*);
 extern int set_state_1d(char *, double *, int*);
 extern int set_state_scalar(char *, double *);
 extern int call_function(char *, char *);
@@ -38,7 +38,7 @@ def set_state_char(*args):
     return 0
 
 @ffi.def_extern(error=1)
-def get_state(*args):
+def get_state_py(*args):
     module.get_state(args, ffi=ffi)
     return 0
 
