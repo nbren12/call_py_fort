@@ -56,25 +56,25 @@ contains
 
     end subroutine test2d
 
-    ! @test
-    ! subroutine test3d_double()
-    ! use pfunit_mod
-    ! use iso_c_binding
-    ! implicit none
+   @test
+    subroutine test3d_double()
+    use pfunit_mod
+    use iso_c_binding
+    implicit none
 
-    ! integer i, j, k
-    ! real(8) :: a(10, 5, 3)
-    ! real(8) :: tmp(10, 5, 3)
+    integer i, j, k
+    real(8) :: a(10, 5, 3)
+    real(8) :: tmp(10, 5, 3)
 
 
-    ! call random_number(a)
+    call random_number(a)
 
-    ! call set_state("a", a)
+    call set_state("a", a)
     ! call get_state("a", tmp, size(a))
 
     ! @assertEqual(a, tmp)
 
-    ! end subroutine test3d_double
+    end subroutine test3d_double
 
     @test
     subroutine test3d()
@@ -91,7 +91,6 @@ contains
 
     call set_state("a", a)
     call get_state("a", tmp, size(a))
-
     @assertEqual(a, tmp)
 
     end subroutine test3d

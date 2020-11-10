@@ -16,6 +16,7 @@ module callpy_mod
 
   interface set_state
      module procedure set_state_double_3d
+     module procedure set_state_float_3d
   end interface
 
 contains
@@ -42,7 +43,7 @@ contains
 
   subroutine set_state_double_3d(tag, t)
     character(len=*) :: tag
-    real :: t(:,:,:)
+    real(8) :: t(:,:,:)
     ! work arrays
     real(c_double) :: tmp(size(t, 1), size(t, 2), size(t, 3))
     integer(c_int) :: nx, ny, nz
@@ -60,6 +61,27 @@ contains
     call check(set_state_py(tag_c, tmp, nx, ny, nz))
 
   end subroutine set_state_double_3d
+
+  subroutine set_state_float_3d(tag, t)
+    character(len=*) :: tag
+    real :: t(:,:,:)
+    ! work arrays
+    real(c_double) :: tmp(size(t, 1), size(t, 2), size(t, 3))
+    integer(c_int) :: nx, ny, nz
+    character(len=256) :: tag_c
+
+
+    tag_c = trim(tag)//char(0)
+
+    tmp = t
+
+    nx = size(tmp, 1)
+    ny = size(tmp, 2)
+    nz = size(tmp, 3)
+
+    call check(set_state_py(tag_c, tmp, nx, ny, nz))
+
+  end subroutine set_state_float_3d
 
   subroutine set_state2d(tag, t)
     character(len=*) :: tag
