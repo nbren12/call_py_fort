@@ -14,6 +14,10 @@ module callpy_mod
      end function set_state_py
   end interface
 
+  interface set_state
+     module procedure set_state_double_3d
+  end interface
+
 contains
 
   subroutine call_function(module_name, function_name)
@@ -36,7 +40,7 @@ contains
 
   end subroutine call_function
 
-  subroutine set_state(tag, t)
+  subroutine set_state_double_3d(tag, t)
     character(len=*) :: tag
     real :: t(:,:,:)
     ! work arrays
@@ -55,7 +59,7 @@ contains
 
     call check(set_state_py(tag_c, tmp, nx, ny, nz))
 
-  end subroutine set_state
+  end subroutine set_state_double_3d
 
   subroutine set_state2d(tag, t)
     character(len=*) :: tag
