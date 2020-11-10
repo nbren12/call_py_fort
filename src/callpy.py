@@ -50,13 +50,6 @@ def set_state(args, ffi=None):
     STATE[tag] = arr
 
 
-def set_state_1d(args, ffi=None):
-    tag, t, n = args
-    tag = ffi.string(tag).decode('UTF-8')
-    arr = asarray(ffi, t, (n[0], )).copy()
-    STATE[tag] = arr
-
-
 def set_state_scalar(args, ffi=None):
     tag, t = args
     tag = ffi.string(tag).decode('UTF-8')

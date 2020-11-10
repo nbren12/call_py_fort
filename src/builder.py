@@ -18,11 +18,6 @@ from my_plugin import ffi
 import callpy as module
 
 @ffi.def_extern(error=1)
-def set_state_1d(*args):
-    module.set_state_1d(args, ffi=ffi)
-    return 0
-
-@ffi.def_extern(error=1)
 def set_state_scalar(*args):
     module.set_state_scalar(args, ffi=ffi)
     return 0
