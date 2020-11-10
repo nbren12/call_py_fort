@@ -13,6 +13,7 @@ This library has the following dependencies
 1. cmake (>=3.4+)
 
 To install pfunit on a linux system, you can run a commmand like the following:
+
     export F90=gfortran
     export F90_VENDOR=GNU
     export PFUNIT=/usr/local
