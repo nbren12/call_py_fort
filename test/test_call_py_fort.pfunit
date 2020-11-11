@@ -37,6 +37,23 @@ contains
     end subroutine test1d
 
     @test
+    subroutine test1d_integer()
+    use pfunit_mod
+    use iso_c_binding
+    implicit none
+
+    integer i
+    integer :: a(10)
+    integer :: tmp(10)
+
+    a = (/(i,i=1,10)/)
+    call set_state("a", a)
+    call get_state("a", tmp)
+    @assertEqual(a, tmp)
+
+    end subroutine test1d_integer
+
+    @test
     subroutine test2d()
     use pfunit_mod
     use iso_c_binding

@@ -29,6 +29,7 @@ module callpy_mod
      module procedure set_state_float_3d
      module procedure set_state_float_2d
      module procedure set_state_float_1d
+     module procedure set_state_integer_1d
   end interface
 
   interface get_state
@@ -38,6 +39,7 @@ module callpy_mod
     module procedure get_state_double_3d
     module procedure get_state_double_2d
     module procedure get_state_double_1d
+    module procedure get_state_integer_1d
   end interface
 
   public :: get_state, set_state, set_state_char, &
@@ -65,6 +67,24 @@ contains
     call check(call_function_py(mod_name_c, fun_name_c))
 
   end subroutine call_function
+
+  subroutine set_state_integer_1d(tag, t)
+    character(len=*) :: tag
+    integer :: t(:)
+    ! work arrays
+    real(c_double) :: tmp(size(t, 1))
+    integer(c_int) :: nx, ny, nz
+    character(len=256) :: tag_c
+
+
+    tag_c = trim(tag)//char(0)
+    tmp = dble(t)
+    nx = size(tmp, 1)
+    ny = -1
+    nz = -1
+
+    call check(set_state_py(tag_c, tmp, nx, ny, nz))
+  end subroutine set_state_integer_1d
 
   subroutine set_state_double_1d(tag, t)
     character(len=*) :: tag
@@ -292,6 +312,19 @@ contains
     call check(get_state_py(tag_c, t_, n))
     t = real(t_)
   end subroutine get_state_float_1d
+
+  subroutine get_state_integer_1d(tag, t)
+    character(len=*) :: tag
+    integer :: t(:)
+    real(c_double) :: t_(size(t, 1))
+    character(len=256) :: tag_c
+
+    integer(c_int) :: n
+    n  = size(t)
+    tag_c = trim(tag)//char(0)
+    call check(get_state_py(tag_c, t_, n))
+    t = nint(t_)
+  end subroutine get_state_integer_1d
 
   subroutine set_state_char(tag, chr)
     interface
