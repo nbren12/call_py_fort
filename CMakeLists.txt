@@ -27,4 +27,3 @@ endif(${CMAKE_Fortran_COMPILER_ID} MATCHES GNU)
 
 add_subdirectory(src)
 add_subdirectory(test)
-
