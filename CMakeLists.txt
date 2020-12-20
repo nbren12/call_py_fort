@@ -26,4 +26,8 @@ elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES PGI)
 endif(${CMAKE_Fortran_COMPILER_ID} MATCHES GNU)
 
 add_subdirectory(src)
-add_subdirectory(test)
+
+find_package(pFUnit 3.2.9)
+if(${pFUnit_FOUND})
+    add_subdirectory(test)
+endif()
