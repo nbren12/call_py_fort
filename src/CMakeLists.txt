@@ -10,6 +10,7 @@ target_include_directories(callpy PUBLIC
     )
 
 install(TARGETS callpy
+    EXPORT callpy
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -19,6 +20,11 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION include
     FILES_MATCHING PATTERN "*.mod"
     PATTERN "CMakeFiles" EXCLUDE
     )
+install(EXPORT callpy
+    FILE CallPyFortConfig.cmake
+    DESTINATION lib/cmake/CallPyFort
+    NAMESPACE CallPyFort::
+)
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/plugin.c
