@@ -9,7 +9,7 @@ post](https://www.noahbrenowitz.com/post/calling-fortran-from-python/).
 
 This library has the following dependencies
 1. pfUnit (v3.2.9) for the unit tests
-1. python (3+) with numpy and cffi
+1. python (3+) with numpy and cffi, with libpython built as a shared library.
 1. cmake (>=3.4+)
 
 To install pfunit on a linux system, you can run a commmand like the following:
@@ -96,3 +96,5 @@ point of one, two, or three dimensions.
 ## Examples
 
 See the [unit tests](/test/test_call_py_fort.pfunit) for more examples.
+
+
