@@ -8,34 +8,31 @@ post](https://www.noahbrenowitz.com/post/calling-fortran-from-python/).
 ## Installation
 
 This library has the following dependencies
-1. pfUnit (v3.2.9) for the unit tests
+1. pfUnit for the unit tests
 1. python (3+) with numpy and cffi
 1. cmake (>=3.4+)
 
-To install pfunit on a linux system, you can run a commmand like the following:
+This development environment can be setup with the nix package manager. To
+enter a developer environment with all these dependencies installed run:
 
-    export F90=gfortran
-    export F90_VENDOR=GNU
-    export PFUNIT=/usr/local
-    curl -L https://github.com/Goddard-Fortran-Ecosystem/pFUnit/archive/3.2.9.tar.gz | tar xz
-    cd pFUnit-3.2.9 && \
-        cmake . && \
-        make &&\
-        sudo make install INSTALL_DIR=${PFUNIT}
+    nix-shell
 
-Installing python dependencies is out of scope of this documentation.
-
-See the [continuous integration configuration](.github/workflows/check.yaml) for an example of how to install all these dependencies on an ubuntu system
-
-Once the dependencies are installed, you can compile and install this library using
+Once the dependencies are installed, you can compile this library using
 
     mkdir build
     cd build 
     cmake ..
     make
+
+Run the tests:
+
+    make test
+
+Install on your system
+
     make install
 
-This should install the `libcallpy` library to `/usr/local/lib` and the
+This will usually install the `libcallpy` library to `/usr/local/lib` and the
 necessary module files to `/usr/local/include`. The specific way to add this
 library to a Fortran code base will depend on the build system of that code.
 Typically, you will need to add a flag `-I/usr/local/include` to any fortran
