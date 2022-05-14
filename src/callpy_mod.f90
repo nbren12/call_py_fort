@@ -30,6 +30,7 @@ module callpy_mod
      module procedure set_state_float_2d
      module procedure set_state_float_1d
      module procedure set_state_integer_1d
+     module procedure set_state_char
   end interface
 
   interface get_state
