@@ -92,6 +92,20 @@ point of one, two, or three dimensions.
 
 ## Examples
 
+See these [examples](/examples). Most examples pair one fortran driver file
+(e.g. `hello_world.f90`) with a python module that it calls (e.g. `hello_world.py`).
+
+They can be built from the project root like this:
+
+```
+cmake -B build .
+make -C build
+# need to add the example python modules to the import path
+export PYTHONPATH=$(pwd)/examples:$PYTHONPATH
+# run the example
+./build/examples/hello_world
+```
+
 See the [unit tests](/test/test_call_py_fort.pfunit) for more examples.
 
 ## Troubleshooting
