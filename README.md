@@ -93,3 +93,38 @@ point of one, two, or three dimensions.
 ## Examples
 
 See the [unit tests](/test/test_call_py_fort.pfunit) for more examples.
+
+## Troubleshooting
+
+Embedded python does not initialize certain variables in the `sys` module the
+same as running a python script via the `python` command line. This leads to
+some common errors when using `call_py_fort`.
+
+### Module not found errors
+
+Example of error:
+```
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ModuleNotFoundError: No module named 'your_module'
+```
+
+Solution: When run in embedded mode, python does not include the current working
+directory in `sys.path`. You can fix this in a few ways
+#. add the current directory to the PYTHONPATH environment variable `export PYTHONPATH=$(pwd)`
+#. If you have packaged it you can install it in editable mode `pip install
+-e`.
+
+### `sys.argv` is None
+
+Some evil libraries like tensorflow actually look at your command line
+arguments when they are imported. Unfortunately, `sys.argv` is not initialized
+when python is run in embedded mode so this will lead to errors when importing
+such packages. Fix this by setting `sys.argv` before importing such packages
+e.g.
+```
+import sys
+sys.argv = []
+import tensorflow
+```
+
