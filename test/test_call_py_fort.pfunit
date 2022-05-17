@@ -160,6 +160,9 @@ contains
 
     a = "hello"
     call set_state("a", a)
+    call get_state("a", b)
+
+    @assertEqual(a, b)
 
     end subroutine test_set_state_char
 

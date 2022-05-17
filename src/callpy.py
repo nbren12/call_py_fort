@@ -66,6 +66,16 @@ def set_state_char(*args):
     STATE[tag] = chr
     return 0
 
+@ffi.def_extern(error=1)
+def get_state_char(tag_ptr, value_ptr, size_ptr):
+    tag = ffi.string(tag_ptr).decode("UTF-8")
+    value = STATE[tag]
+    size = size_ptr[0]
+    assert isinstance(value, str)
+    value_encoded = value.encode("UTF-8")
+    destination_buffer = ffi.buffer(value_ptr, size)
+    destination_buffer[: len(value_encoded)] = value_encoded
+    return 0
 
 @ffi.def_extern(error=1)
 def get_state_py(tag, t, n):

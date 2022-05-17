@@ -41,6 +41,7 @@ module callpy_mod
     module procedure get_state_double_2d
     module procedure get_state_double_1d
     module procedure get_state_integer_1d
+    module procedure get_state_char
   end interface
 
   public :: get_state, set_state, set_state_char, &
@@ -346,6 +347,21 @@ contains
     call check(set_state_char_py(tag_, chr_))
   end subroutine set_state_char
 
+  subroutine get_state_char(tag, chr)
+    interface
+       function get_state_char_py(tag, chr, n) result(y)&
+            bind(c, name='get_state_char')
+         use iso_c_binding
+         implicit none
+         character(c_char) :: tag
+         character(c_char) :: chr
+         integer(c_int) :: y, n
+       end function
+    end interface
+    character(len=*) :: tag, chr
+    chr = ""
+    call check(get_state_char_py(trim(tag) // char(0), chr, len(chr)))
+  end subroutine get_state_char
 
   subroutine check(ret)
     integer :: ret
