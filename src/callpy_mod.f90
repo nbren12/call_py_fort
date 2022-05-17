@@ -44,7 +44,7 @@ module callpy_mod
     module procedure get_state_char
   end interface
 
-  public :: get_state, set_state, set_state_char, &
+  public :: get_state, set_state,&
       call_function, set_state_scalar
 
 
