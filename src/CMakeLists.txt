@@ -3,6 +3,10 @@ set(Python_USE_STATIC_LIBS FALSE)
 find_package(Python 3 REQUIRED COMPONENTS Interpreter Development)
 add_library(callpy SHARED callpy_mod.f90 ${CMAKE_CURRENT_BINARY_DIR}/plugin.c)
 target_link_libraries(callpy PUBLIC Python::Python)
+target_include_directories(callpy PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    $<INSTALL_INTERFACE:include/callpy>
+)
 
 
 install(TARGETS callpy
@@ -10,6 +14,7 @@ install(TARGETS callpy
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+    INCLUDES DESTINATION include
     )
 
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION include
@@ -28,3 +33,4 @@ add_custom_command(
   COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/builder.py ${CMAKE_CURRENT_SOURCE_DIR}/callpy.py
   COMMENT "Building CFFI Module"
 )
+
