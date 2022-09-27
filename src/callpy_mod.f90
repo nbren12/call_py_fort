@@ -9,16 +9,16 @@ module callpy_mod
      function set_state_py(tag, t, nx, ny, nz) result(y) bind(c)
        use iso_c_binding
        character(c_char) :: tag
-       real(c_double) t(nx, ny, nz)
        integer(c_int) :: nx, ny, nz
+       real(c_double) t(nx, ny, nz)
        integer(c_int) :: y
      end function set_state_py
 
     function get_state_py(tag, t, n) result(y) bind(c)
       use iso_c_binding
       character(c_char) :: tag
-      real(c_double) t(n)
       integer(c_int) :: n, y
+      real(c_double) t(n)
     end function get_state_py
   end interface
 
