@@ -1,5 +1,5 @@
-module test_call_py_fort_mod
-    use pfunit_mod
+module test_call_py_fort
+    use funit
     use callpy_mod
 
 contains
@@ -11,14 +11,14 @@ contains
 
     @test
     subroutine testHelloWorld()
-    use pfunit_mod
+    use funit
     implicit none
     @assertEqual("Hello World!","Hello World!")
     end subroutine testHelloWorld
 
     @test
     subroutine test1d()
-    use pfunit_mod
+    use funit
     use iso_c_binding
     implicit none
 
@@ -38,7 +38,7 @@ contains
 
     @test
     subroutine test1d_integer()
-    use pfunit_mod
+    use funit
     use iso_c_binding
     implicit none
 
@@ -55,7 +55,7 @@ contains
 
     @test
     subroutine test2d()
-    use pfunit_mod
+    use funit
     use iso_c_binding
     implicit none
 
@@ -75,7 +75,7 @@ contains
 
    @test
     subroutine test3d_double()
-    use pfunit_mod
+    use funit
     use iso_c_binding
     implicit none
 
@@ -94,7 +94,7 @@ contains
 
    @test
     subroutine test2d_double()
-    use pfunit_mod
+    use funit
     use iso_c_binding
     implicit none
 
@@ -113,7 +113,7 @@ contains
 
     @test
     subroutine test3d()
-    use pfunit_mod
+    use funit
     use iso_c_binding
     implicit none
 
@@ -130,10 +130,9 @@ contains
 
     end subroutine test3d
 
-
     @test
-    subroutine test_send_char()
-    use pfunit_mod
+    subroutine test_set_state_char()
+    use funit
     use iso_c_binding
     implicit none
 
@@ -141,17 +140,16 @@ contains
     character(len=256) :: a, b
 
     a = "hello"
+    call set_state("a", a)
+    call get_state("a", b)
 
-    call set_state_char("a", a)
-    !call get_char("a", b)
+    @assertEqual(a, b)
 
-    !@assertEqual(a, b)
-
-    end subroutine test_send_char
+    end subroutine test_set_state_char
 
     @test
     subroutine test_call_fun
-    use pfunit_mod
+    use funit
     use iso_c_binding
     implicit none
 

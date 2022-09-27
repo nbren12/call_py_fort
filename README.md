@@ -12,30 +12,27 @@ This library has the following dependencies
 1. python (3+) with numpy and cffi, with libpython built as a shared library.
 1. cmake (>=3.4+)
 
-To install pfunit on a linux system, you can run a commmand like the following:
+This development environment can be setup with the nix package manager. To
+enter a developer environment with all these dependencies installed run:
 
-    export F90=gfortran
-    export F90_VENDOR=GNU
-    export PFUNIT=/usr/local
-    curl -L https://github.com/Goddard-Fortran-Ecosystem/pFUnit/archive/3.2.9.tar.gz | tar xz
-    cd pFUnit-3.2.9 && \
-        cmake . && \
-        make &&\
-        sudo make install INSTALL_DIR=${PFUNIT}
+    nix-shell
 
-Installing python dependencies is out of scope of this documentation.
-
-See the [continuous integration configuration](.github/workflows/check.yaml) for an example of how to install all these dependencies on an ubuntu system
-
-Once the dependencies are installed, you can compile and install this library using
+Once the dependencies are installed, you can compile this library using
 
     mkdir build
     cd build 
     cmake ..
     make
+
+Run the tests:
+
+    make test
+
+Install on your system
+
     make install
 
-This should install the `libcallpy` library to `/usr/local/lib` and the
+This will usually install the `libcallpy` library to `/usr/local/lib` and the
 necessary module files to `/usr/local/include`. The specific way to add this
 library to a Fortran code base will depend on the build system of that code.
 Typically, you will need to add a flag `-I/usr/local/include` to any fortran
@@ -95,6 +92,53 @@ point of one, two, or three dimensions.
 
 ## Examples
 
+See these [examples](/examples). Most examples pair one fortran driver file
+(e.g. `hello_world.f90`) with a python module that it calls (e.g. `hello_world.py`).
+
+They can be built from the project root like this:
+
+```
+cmake -B build .
+make -C build
+# need to add the example python modules to the import path
+export PYTHONPATH=$(pwd)/examples:$PYTHONPATH
+# run the example
+./build/examples/hello_world
+```
+
 See the [unit tests](/test/test_call_py_fort.pfunit) for more examples.
 
+## Troubleshooting
+
+Embedded python does not initialize certain variables in the `sys` module the
+same as running a python script via the `python` command line. This leads to
+some common errors when using `call_py_fort`.
+
+### Module not found errors
+
+Example of error:
+```
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ModuleNotFoundError: No module named 'your_module'
+```
+
+Solution: When run in embedded mode, python does not include the current working
+directory in `sys.path`. You can fix this in a few ways
+#. add the current directory to the PYTHONPATH environment variable `export PYTHONPATH=$(pwd)`
+#. If you have packaged it you can install it in editable mode `pip install
+-e`.
+
+### `sys.argv` is None
+
+Some evil libraries like tensorflow actually look at your command line
+arguments when they are imported. Unfortunately, `sys.argv` is not initialized
+when python is run in embedded mode so this will lead to errors when importing
+such packages. Fix this by setting `sys.argv` before importing such packages
+e.g.
+```
+import sys
+sys.argv = []
+import tensorflow
+```
 

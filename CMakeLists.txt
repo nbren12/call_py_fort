@@ -10,7 +10,7 @@ set(CMAKE_Fortran_COMPILER gfortran)
 
 if (${CMAKE_Fortran_COMPILER_ID} MATCHES GNU)
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -Wall -Wextra -fimplicit-none -fbacktrace")
-    set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} -Wnoerror")
+    set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} -Wno-error")
     set(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} -fbounds-check --coverage")
 
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES Intel)
@@ -27,8 +27,8 @@ endif(${CMAKE_Fortran_COMPILER_ID} MATCHES GNU)
 
 
 add_subdirectory(src)
-
-find_package(pFUnit 3.2.9)
-if(${pFUnit_FOUND})
+add_subdirectory(examples)
+find_package(PFUNIT)
+if(${PFUNIT_FOUND})
     add_subdirectory(test)
 endif()
