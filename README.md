@@ -8,8 +8,8 @@ post](https://www.noahbrenowitz.com/post/calling-fortran-from-python/).
 ## Installation
 
 This library has the following dependencies
-1. pfUnit for the unit tests
-1. python (3+) with numpy and cffi
+1. pfUnit (v3.2.9) for the unit tests
+1. python (3+) with numpy and cffi, with libpython built as a shared library.
 1. cmake (>=3.4+)
 
 This development environment can be setup with the nix package manager. To
