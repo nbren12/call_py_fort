@@ -66,7 +66,7 @@ reading numpy arrays from this dictionary back into fortran. Let this
 dictionary by called STATE. In terms of python operations, the above lines
 roughly translate to
 
-    # abuse of notation signifyling that the left-hand side is a numpy array
+    # abuse of notation signifyling that the right-hand side is a numpy array
     STATE["a"] = a[:]
     # same as `print` but with module name
     builtins.print(STATE)
