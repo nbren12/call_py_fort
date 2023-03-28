@@ -1,6 +1,7 @@
 # call_py_fort
 
-![status](https://github.com/VulcanClimateModeling/call_py_fort/workflows/Check/badge.svg)
+![status](https://github.com/VulcanClimateModeling/call_py_fort/workflows/Check/badge.svg)[![DOI](https://zenodo.org/badge/145489904.svg)](https://zenodo.org/badge/latestdoi/145489904)
+
 
 Call python from Fortran (not the other way around). Inspired by this [blog
 post](https://www.noahbrenowitz.com/post/calling-fortran-from-python/).
