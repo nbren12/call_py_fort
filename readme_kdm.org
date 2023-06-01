@@ -1,0 +1,137 @@
+
+* Introduction
+
++ https://www.noahbrenowitz.com/post/calling-fortran-from-python/
++ https://github.com/nbren12/call_py_fort
++ https://github.com/NASA-GISS/call_py_fort
+
+#+BEGIN_SRC bash :exports both :results verbatim :dir ../
+gh repo clone NASA-GISS/call_py_fort
+#+END_SRC
+
+According to README, dependencies are
+
++ pfUnit (v3.2.9) for the unit tests
++ python (3+) with numpy and cffi, with libpython built as a shared library.
++ cmake (>=3.4+)
+
+#+BEGIN_SRC bash :exports both :results verbatim
+mamba create -n fort2py
+mamba activate fort2py
+mamba install cffi numpy
+#+END_SRC
+
++ https://github.com/Goddard-Fortran-Ecosystem/pFUnit
++ https://github.com/NASA-GISS/pFUnit
+
+#+BEGIN_SRC bash :exports both :results verbatim 
+cd ~/projects/GISS
+git clone https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+cd pFUnit
+
+mkdir build
+cd build
+cmake ..
+make -j tests
+make -j install
+#+END_SRC
+
+Build
+
+#+BEGIN_SRC bash :exports both :results verbatim
+# cmake -B build .
+cmake -B build . \
+      -D CMAKE_INSTALL_PREFIX=./opt/ \
+      -D PYTHON_INCLUDE_DIR=$(python -c "import sysconfig; print(sysconfig.get_path('include'))")  \
+      -D PYTHON_LIBRARY=$(python -c "import sysconfig; print(sysconfig.get_config_var('LIBDIR'))") \
+      -D Python_EXECUTABLE:FILEPATH=$(which python) \
+      -D CMAKE_PREFIX_PATH=../pFUnit/build/installed
+
+make -C build
+make -C build install
+
+# need to add the example python modules to the import path
+export PYTHONPATH=.:$(pwd)/examples:$PYTHONPATH
+# run the example
+./build/examples/hello_world
+#+END_SRC
+
+* Speed test
+
+#+BEGIN_SRC f90 :tangle ex1.f90
+program example
+      
+  use callpy_mod
+  implicit none
+
+  character(len=*), parameter :: py_module = "ex1" ! ex1.py
+  
+  real :: start, finish
+  
+  integer, parameter :: nx = 360, ny = 180, nz = 1000
+  integer i
+  real, dimension(nx, ny, nz) :: a
+
+  call cpu_time(start)
+  a = a + 4.2
+  call cpu_time(finish)
+  print '("Fortan a = a + 4.2: ",f6.3," seconds.")',finish-start
+
+  call set_state("a", a)
+
+  call cpu_time(start)
+  do i=1, 1000
+     call call_function(py_module, "empty_function")
+  end do
+  call cpu_time(finish)
+  print '("Fortan call python 1000x: ",f6.3," seconds.")',finish-start
+
+  ! print '("a(1,1,1): ",f6.3)',a(1,1,1)
+  
+  call cpu_time(start)
+  call call_function(py_module, "add_42")
+  call cpu_time(finish)
+  print '("Python add_42: ",f6.3," seconds.")',finish-start
+
+  ! call call_function("builtins", "print")
+  ! read any changes from "a" back into a.
+  call get_state("a", a)
+
+  ! print '("a(1,1,1): ",f6.3)',a(1,1,1)
+  
+end program example
+#+END_SRC
+
+#+BEGIN_SRC python :tangle ex1.py
+
+print("I am at the module scope. Run only at first call")
+
+def empty_function(STATE):
+    return
+
+def add_42(STATE):
+    # this code runs every function call.
+    a = STATE.get("a", 0)
+    a = a + 4.2
+    STATE["a"] = a
+#+END_SRC
+
+Compile & run
+
+#+HEADER_ARG: :pre (org-babel-tangle) # during development, tangle every time you compile+run
+#+NAME: cnr
+#+BEGIN_SRC bash :exports both :results verbatim 
+export PYTHONPATH=.:$(pwd)/examples:$PYTHONPATH
+
+cpf_path=/home/kdm/projects/GISS/call_py_fort/
+export LD_LIBRARY_PATH=${cpf_path}/opt/lib:/home/kdm/local/mambaforge/envs/fort2py/lib
+
+gfortran -I${cpf_path}/opt/include -Wl,-rpath=${cpf_path}/opt/lib -L${cpf_path}/opt/lib ex1.f90 -lcallpy
+
+./a.out
+#+END_SRC
+
+#+RESULTS: cnr
+: Fortan a = a + 4.2:  0.249 seconds.
+: Fortan call python 1000x:  0.002 seconds.
+: Python add_42:  0.090 seconds.
